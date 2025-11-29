@@ -283,44 +283,44 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, rossSection = false,
 
   FrontCurve = [ for(i=[0:len(FrontPath)-1]) transform(FrontPath[i], DishShape(DishDepth(keyID), FrontDishArc(i), 1, d = 0)) ];  
   BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  DishShape(DishDepth(keyID),  BackDishArc(i), 1, d = 0)) ];
-  
+
   //builds
-  difference(){
-    union(){
-      difference(){
+  difference() {
+    union() {
+      difference() {
         skin([for (i=[0:layers-1]) transform(translation(CapTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle(CapTransform(i, keyID), b = CapRoundness(i,keyID),fn=fn))]); //outer shell
-        
-        //Cut inner shell
-        if(Stem == true){ 
+
+        // Cut inner shell
+        if (Stem == true) {
           translate([0,0,-.001])skin([for (i=[0:layers-1]) transform(translation(InnerTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle(InnerTransform(i, keyID), b = CapRoundness(i,keyID),fn=fn))]);
         }
       }
-      if(Stem == true){
-        translate([0,0,StemBrimDep])rotate(stemRot)difference(){   
-          //cylinderical Stem body 
-          cylinder(d =5.5,KeyHeight(keyID)-StemBrimDep, $fn= 32);
+      if (Stem == true) {
+        translate([0, 0, StemBrimDep]) rotate(stemRot) difference() {
+          //cylinderical Stem body
+          cylinder(d = 5.5, KeyHeight(keyID)-StemBrimDep, $fn= 32);
           skin(StemCurve);
           skin(StemCurve2);
         }
-
       }
-    //cut for fonts and extra pattern for light?
+      //cut for fonts and extra pattern for light?
     }
-    
+
     // Cuts
-    
+
     // Fonts
     if (Legends == true) {
       #rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
         translate([-1, -5, KeyHeight(keyID)-2.5])
           linear_extrude(height = 1)
             text(text = "ver2", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center");
-      //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])translate([0,-3.5,0])
-      //  linear_extrude(height = 0.5)
-      //    text(text = "Me", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
+      //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
+      //  translate([0,-3.5,0])
+      //    linear_extrude(height = 0.5)
+      //      text(text = "Me", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center");
     }
-      
-    // Dish Shape 
+
+    // Dish Shape
     if (Dish == true) {
       if (visualizeDish == false) {
         translate([-TopWidShift(keyID), .00001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])
@@ -340,20 +340,20 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, rossSection = false,
           rotate([0, -YAngleSkew(keyID), 0])
             rotate([0, -90-XAngleSkew(keyID), 270-ZAngleSkew(keyID)])
               skin(BackCurve);
-      } 
+      }
     }
-   
+
     if (crossSection == true) {
-      translate([0,-15,-.1]) cube([15,30,15]); 
+      translate([0, -15, -.1]) cube([15, 30, 15]);
     }
   }
-  
+
   //Homing dot
   if (homeDot == true) {
       // center dot
       #translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])
         sphere(d = dotRadius); // center dot
-        
+
       // double bar dots (not working)
       //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
       //  translate([.75, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+0.5])
@@ -361,7 +361,7 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, rossSection = false,
       //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
       //  translate([-.75, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+0.5])
       //    sphere(r = dotRadius); // center dot
-        
+
       // tri center dots (not working)
       //#rotate([0, YAngleSkew(keyID), ZAngleSkew(keyID)])
       //  translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-0.1]) {
@@ -406,19 +406,18 @@ function StemTrajectory2() =
 
 
 module choc_stem() {
-  
-    translate([5.7/2,0,-3.4/2+2])difference(){
-    cube([1.25,3, 3.4], center= true);
-    translate([3.9,0,0])cylinder(d=7,3.4,center = true);
-    translate([-3.9,0,0])cylinder(d=7,3.4,center = true);
+  translate([5.7/2, 0, -3.4/2+2]) difference() {
+    cube([1.25, 3, 3.4], center= true);
+    translate([3.9, 0, 0]) cylinder(d=7, 3.4, center = true);
+    translate([-3.9, 0, 0]) cylinder(d=7, 3.4, center = true);
   }
-  translate([-5.7/2,0,-3.4/2+2])difference(){
-    cube([1.25,3, 3.4], center= true);
-    translate([3.9,0,0])cylinder(d=7,3.4,center = true);
-    translate([-3.9,0,0])cylinder(d=7,3.4,center = true);
+  translate([-5.7/2, 0, -3.4/2+2]) difference() {
+    cube([1.25, 3, 3.4], center= true);
+    translate([3.9, 0, 0]) cylinder(d=7, 3.4, center = true);
+    translate([-3.9, 0, 0]) cylinder(d=7, 3.4, center = true);
   }
-  
 }
+
 /// ----- helper functions 
 function rounded_rectangle_profile(size=[1,1],r=1,fn=32) = [
 	for (index = [0:fn-1])
