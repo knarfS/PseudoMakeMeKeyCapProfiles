@@ -316,65 +316,94 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, rossSection = false,
   BackCurve  = [ for(i=[0:len(BackPath)-1])  transform(BackPath[i],  DishShape(DishDepth(keyID),  BackDishArc(i), 1, d = 0)) ];
   
   //builds
-  difference(){
-    union(){
-      difference(){
+  difference() {
+    union() {
+      difference() {
         skin([for (i=[0:layers-1]) transform(translation(CapTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle(CapTransform(i, keyID), b = CapRoundness(i,keyID),fn=fn))]); //outer shell
         
         //Cut inner shell
-        if(Stem == true){ 
+        if (Stem == true) {
           translate([0,0,-.001])skin([for (i=[0:layers-1]) transform(translation(InnerTranslation(i, keyID)) * rotation(CapRotation(i, keyID)), elliptical_rectangle(InnerTransform(i, keyID), b = CapRoundness(i,keyID),fn=fn))]);
         }
       }
-      if(Stem == true){
-         translate([0,0,StemBrimDep])rotate(stemRot)difference(){   
-          cylinder(d =5.5,KeyHeight(keyID)-StemBrimDep, $fn= 32);
-          skin(StemCurve);
-          skin(StemCurve2);
-        }
+      if (Stem == true) {
+         translate([0,0,StemBrimDep])rotate(stemRot)difference() {
+           cylinder(d =5.5,KeyHeight(keyID)-StemBrimDep, $fn= 32);
+           skin(StemCurve);
+           skin(StemCurve2);
+         }
 //        translate([0,0,-.001])skin([for (i=[0:stemLayers-1]) transform(translation(StemTranslation(i,keyID))*rotation(StemRotation(i, keyID)), rounded_rectangle_profile(StemTransform(i, keyID),fn=fn,r=StemRadius(i, keyID)))]); //Transition Support for taller profile
       }
     //cut for fonts and extra pattern for light?
     }
-    
+
     //Cuts
-    
+
     //Fonts
-    if(Legends ==  true){
-//          #rotate([-XAngleSkew(keyID),YAngleSkew(keyID),ZAngleSkew(keyID)])
-      translate([0,0,KeyHeight(keyID)-5])linear_extrude(height =5)text( text = "A", font = "Calibri:style=Bold", size = 4, valign = "center", halign = "center" );
-      //  #rotate([-XAngleSkew(keyID),YAngleSkew(keyID),ZAngleSkew(keyID)])translate([0,-3.5,0])linear_extrude(height = 0.5)text( text = "Me", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
+    if (Legends == true) {
+      //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
+      translate([0, 0, KeyHeight(keyID)-5])
+        linear_extrude(height = 5)
+          text(text = "A", font = "Calibri:style=Bold", size = 4, valign = "center", halign = "center");
+      //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
+      //  translate([0, -3.5, 0])
+      //    linear_extrude(height = 0.5)
+      //      text(text = "Me", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center");
+    }
+
+    //Dish Shape
+    if (Dish == true) {
+      if (visualizeDish == false) {
+        translate([-TopWidShift(keyID), .00001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])
+          rotate([0, -YAngleSkew(keyID), 0])
+            rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])
+              skin(FrontCurve);
+        translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])
+          rotate([0, -YAngleSkew(keyID), 0])
+            rotate([0, -90-XAngleSkew(keyID), 270-ZAngleSkew(keyID)])
+              skin(BackCurve);
+      } else {
+        #translate([-TopWidShift(keyID), .00001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])
+          rotate([0, -YAngleSkew(keyID), 0])
+            rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])
+              skin(FrontCurve);
+        #translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])
+          rotate([0, -YAngleSkew(keyID), 0])
+            rotate([0, -90-XAngleSkew(keyID), 270-ZAngleSkew(keyID)])
+              skin(BackCurve);
       }
-   //Dish Shape 
-    if(Dish == true){
-     if(visualizeDish == false){
-      translate([-TopWidShift(keyID),.00001-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0,-YAngleSkew(keyID),0])rotate([0,-90+XAngleSkew(keyID),90-ZAngleSkew(keyID)])skin(FrontCurve);
-      translate([-TopWidShift(keyID),-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0,-YAngleSkew(keyID),0])rotate([0,-90-XAngleSkew(keyID),270-ZAngleSkew(keyID)])skin(BackCurve);
-     } else {
-      #translate([-TopWidShift(keyID),.00001-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)]) rotate([0,-YAngleSkew(keyID),0])rotate([0,-90+XAngleSkew(keyID),90-ZAngleSkew(keyID)])skin(FrontCurve);
-      #translate([-TopWidShift(keyID),-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0,-YAngleSkew(keyID),0])rotate([0,-90-XAngleSkew(keyID),270-ZAngleSkew(keyID)])skin(BackCurve);
-     } 
-   }
-     if(crossSection == true) {
-       translate([0,-15,-.1])cube([15,30,20]); 
-//      translate([-15.1,-15,-.1])cube([15,30,20]); 
-     }
-    if(homeDot == true){
-      // center dot
-      #translate([0,0,KeyHeight(keyID)-DishHeightDif(keyID)-0.1])sphere(r = dotRadius); // center dot
-      // double bar dots
-//      rotate([-XAngleSkew(keyID),YAngleSkew(keyID),ZAngleSkew(keyID)])translate([.75,-4.5,KeyHeight(keyID)-DishHeightDif(keyID)+0.5])sphere(r = dotRadius); // center dot
-//      rotate([-XAngleSkew(keyID),YAngleSkew(keyID),ZAngleSkew(keyID)])translate([-.75,-4.5,KeyHeight(keyID)-DishHeightDif(keyID)+0.5])sphere(r = dotRadius); // center dot
-      //tri center dots
-//     #rotate([0,YAngleSkew(keyID),ZAngleSkew(keyID)])translate([0,0,KeyHeight(keyID)-DishHeightDif(keyID)-0.1]){
-//        rotate([0,0,0])translate([0,.75,0])sphere(r = dotRadius); // center dot
-//        rotate([0,0,120])translate([0,.75,0])sphere(r = dotRadius); // center dot
-//        rotate([0,0,240])translate([0,.75,0])sphere(r = dotRadius); // center dot
-//      }
+    }
+
+    if (crossSection == true) {
+      translate([0, -15, -.1]) cube([15, 30, 20]);
+      //translate([-15.1, -15, -.1]) cube([15, 30, 20]);
     }
   }
-  //Homing dot
-  
+
+ if (homeDot == true) {
+    $fn = 64;
+
+    // center dot
+    #translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-0.1])
+      sphere(r = dotRadius); // center dot
+
+    // double bar dots
+    //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
+    //  translate([.75, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+0.5])
+    //    sphere(r = dotRadius); // center dot
+    //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
+    //  translate([-.75, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+0.5])
+    //    sphere(r = dotRadius); // center dot
+
+    // tri center dots
+    //#rotate([0, YAngleSkew(keyID), ZAngleSkew(keyID)])
+    //  translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-0.1]) {
+    //    rotate([0, 0, 0]) translate([0, .75, 0]) sphere(r = dotRadius); // center dot
+    //    rotate([0, 0, 120]) translate([0, .75, 0]) sphere(r = dotRadius); // center dot
+    //    rotate([0, 0, 240]) translate([0, .75, 0]) sphere(r = dotRadius); // center dot
+    //  }
+  }
+
 }
 //------------------stems 
 
@@ -406,19 +435,18 @@ StemCurve2  = [for(i=[0:len(StemPath2)-1])  transform(StemPath2[i]*scaling([(1.1
 
 
 module choc_stem() {
-  
-    translate([5.7/2,0,-3.4/2+2])difference(){
-    cube([1.25,3, 3.4], center= true);
-    translate([3.9,0,0])cylinder(d=7,3.4,center = true);
-    translate([-3.9,0,0])cylinder(d=7,3.4,center = true);
+  translate([5.7/2, 0, -3.4/2+2]) difference() {
+    cube([1.25, 3, 3.4], center= true);
+    translate([3.9, 0, 0]) cylinder(d=7, 3.4, center = true);
+    translate([-3.9, 0, 0]) cylinder(d=7, 3.4, center = true);
   }
-  translate([-5.7/2,0,-3.4/2+2])difference(){
-    cube([1.25,3, 3.4], center= true);
-    translate([3.9,0,0])cylinder(d=7,3.4,center = true);
-    translate([-3.9,0,0])cylinder(d=7,3.4,center = true);
+  translate([-5.7/2, 0, -3.4/2+2]) difference() {
+    cube([1.25, 3, 3.4], center= true);
+    translate([3.9, 0, 0]) cylinder(d=7, 3.4, center = true);
+    translate([-3.9, 0, 0]) cylinder(d=7, 3.4, center = true);
   }
-  
 }
+
 /// ----- helper functions 
 function rounded_rectangle_profile(size=[1,1],r=1,fn=32) = [
 	for (index = [0:fn-1])
