@@ -307,29 +307,69 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, rossSection = false,
     //cut for fonts and extra pattern for light?
     }
     
-    //Cuts
+    // Cuts
     
-    //Fonts
-    if(Legends ==  true){
-          #rotate([-XAngleSkew(keyID),YAngleSkew(keyID),ZAngleSkew(keyID)])translate([-1,-5,KeyHeight(keyID)-2.5])linear_extrude(height = 1)text( text = "ver2", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
-      //  #rotate([-XAngleSkew(keyID),YAngleSkew(keyID),ZAngleSkew(keyID)])translate([0,-3.5,0])linear_extrude(height = 0.5)text( text = "Me", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
-      }
-   //Dish Shape 
-    if(Dish == true){
-     if(visualizeDish == false){
-      translate([-TopWidShift(keyID),.00001-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0,-YAngleSkew(keyID),0])rotate([0,-90+XAngleSkew(keyID),90-ZAngleSkew(keyID)])skin(FrontCurve);
-      translate([-TopWidShift(keyID),-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0,-YAngleSkew(keyID),0])rotate([0,-90-XAngleSkew(keyID),270-ZAngleSkew(keyID)])skin(BackCurve);
-     } else {
-      #translate([-TopWidShift(keyID),.00001-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)]) rotate([0,-YAngleSkew(keyID),0])rotate([0,-90+XAngleSkew(keyID),90-ZAngleSkew(keyID)])skin(FrontCurve);
-      #translate([-TopWidShift(keyID),-TopLenShift(keyID),KeyHeight(keyID)-DishHeightDif(keyID)])rotate([0,-YAngleSkew(keyID),0])rotate([0,-90-XAngleSkew(keyID),270-ZAngleSkew(keyID)])skin(BackCurve);
-     } 
-   }
-     if(crossSection == true) {
-       translate([0,-15,-.1])cube([15,30,15]); 
-     }
+    // Fonts
+    if (Legends == true) {
+      #rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
+        translate([-1, -5, KeyHeight(keyID)-2.5])
+          linear_extrude(height = 1)
+            text(text = "ver2", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center");
+      //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])translate([0,-3.5,0])
+      //  linear_extrude(height = 0.5)
+      //    text(text = "Me", font = "Constantia:style=Bold", size = 3, valign = "center", halign = "center" );
+    }
+      
+    // Dish Shape 
+    if (Dish == true) {
+      if (visualizeDish == false) {
+        translate([-TopWidShift(keyID), .00001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])
+          rotate([0, -YAngleSkew(keyID), 0])
+            rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])
+              skin(FrontCurve);
+        translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])
+          rotate([0, -YAngleSkew(keyID), 0])
+            rotate([0, -90-XAngleSkew(keyID), 270-ZAngleSkew(keyID)])
+              skin(BackCurve);
+      } else {
+        #translate([-TopWidShift(keyID), .00001-TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])
+          rotate([0, -YAngleSkew(keyID), 0])
+            rotate([0, -90+XAngleSkew(keyID), 90-ZAngleSkew(keyID)])
+              skin(FrontCurve);
+        #translate([-TopWidShift(keyID), -TopLenShift(keyID), KeyHeight(keyID)-DishHeightDif(keyID)])
+          rotate([0, -YAngleSkew(keyID), 0])
+            rotate([0, -90-XAngleSkew(keyID), 270-ZAngleSkew(keyID)])
+              skin(BackCurve);
+      } 
+    }
+   
+    if (crossSection == true) {
+      translate([0,-15,-.1]) cube([15,30,15]); 
+    }
   }
+  
   //Homing dot
-  if(homeDot == true)translate([0,0,KeyHeight(keyID)-DishHeightDif(keyID)-.25])sphere(d = dotRadius);
+  if (homeDot == true) {
+      // center dot
+      #translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])
+        sphere(d = dotRadius); // center dot
+        
+      // double bar dots (not working)
+      //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
+      //  translate([.75, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+0.5])
+      //    sphere(r = dotRadius); // center dot
+      //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
+      //  translate([-.75, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+0.5])
+      //    sphere(r = dotRadius); // center dot
+        
+      // tri center dots (not working)
+      //#rotate([0, YAngleSkew(keyID), ZAngleSkew(keyID)])
+      //  translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-0.1]) {
+      //    rotate([0, 0, 0]) translate([0, .75, 0]) sphere(r = dotRadius); // center dot
+      //    rotate([0, 0, 120]) translate([0, .75, 0]) sphere(r = dotRadius); // center dot
+      //    rotate([0, 0, 240]) translate([0, .75, 0]) sphere(r = dotRadius); // center dot
+      //  }
+  }
 }
 
 //------------------stems 
