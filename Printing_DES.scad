@@ -1,12 +1,12 @@
 use <MX_DES_Standard.scad>
 use <sprues_util.scad>
 
-// R2
-//des_rX(keyID = 2, num_caps = 3);
-// R3
-//des_rX(keyID = 1, num_caps = 10);
 // R4
 //des_rX(keyID = 0, num_caps = 10);
+// R3
+//des_rX(keyID = 1, num_caps = 10);
+// R2
+//des_rX(keyID = 2, num_caps = 10);
 // R3 homing keys
 des_rX(keyID = 1, num_caps = 6, homeDot = true);
 

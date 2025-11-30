@@ -350,6 +350,8 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, rossSection = false,
 
   //Homing dot
   if (homeDot == true) {
+      $fn = 64;
+
       // center dot
       #translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])
         sphere(d = dotRadius); // center dot
