@@ -26,9 +26,9 @@ module des_rX(keyID, num_caps, homeDot = false) {
     // If only one cap, no connector parts are added
     if (num_caps > 1) {
         for (i=[0:num_caps-1]) {
-            create_sprues(i*cap_spacing, cap_bottom_length);
+            create_sprues(i*cap_spacing, cap_bottom_length, sprues_y_flip = true);
         }
         
-        create_connector_link(num_caps, cap_spacing, cap_bottom_length);
+        create_connector_link(num_caps, cap_spacing, cap_bottom_length, sprues_y_flip = true);
     }
 }
