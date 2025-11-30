@@ -4,15 +4,15 @@ function val(a=undef,default=undef) = a == undef ? default : a;
 function vec_is_undef(x,index_=0) = index_ >= len(x) ? true :
 is_undef(x[index_]) && vec_is_undef(x,index_+1);
 
-function is_undef(x) = len(x) > 0 ? vec_is_undef(x) : x == undef;
+function is_undef(x) = is_list(x) ? vec_is_undef(x) : x == undef;
 // Either a or b, but not both
 function either(a,b,default=undef) = is_undef(a) ? (is_undef(b) ? default : b) : is_undef(b) ? a : undef;
 
 function translationv(left=undef,right=undef,up=undef,down=undef,forward=undef,backward=undef,translation=undef) = 
 translationv_2(
-	x = either(up,-down),
-	y = either(right,-left),
-	z = either(forward,-backward),
+	x = either(up, is_undef(down) ? undef : -down),
+	y = either(right, is_undef(left) ? undef : -left),
+	z = either(forward, is_undef(backward) ? undef : -backward),
 	translation = translation);
 
 function translationv_2(x,y,z,translation) =
