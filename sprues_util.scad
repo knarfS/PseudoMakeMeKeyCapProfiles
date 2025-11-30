@@ -2,7 +2,7 @@
 sprues_dia = 2;    // diameter of sprues (mm)
 sprues_len = 3.5;    // length of sprues (mm)
 sprues_cap_intrude = 0.1; // intrusion depth of sprues into the cap (mm)
-sprues_y_offset = 0.55; // adjustment for y offset (mm)
+sprues_y_offset = -0.55; // adjustment for y offset (mm)
 connector_link_dia = 3; // diameter of linking cylinder  (mm)
 cylinder_fn = 32; // resolution of cylinders
 
