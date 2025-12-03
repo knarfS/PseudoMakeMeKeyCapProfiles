@@ -1,4 +1,4 @@
-use <scad-utils/morphology.scad> //for cheaper minwoski 
+use <scad-utils/morphology.scad> //for cheaper minwoski
 use <scad-utils/transformations.scad>
 use <scad-utils/shapes.scad>
 use <scad-utils/trajectory.scad>
@@ -6,21 +6,22 @@ use <scad-utils/trajectory_path.scad>
 use <sweep.scad>
 use <skin.scad>  
 
-/*DES (Distorted Elliptical Saddle) Sculpted Profile for 6x3 and corne thumb 
-Version 2: Eliptical Rectangle
+/*
+ * DES (Distorted Elliptical Saddle) Sculpted Profile for 6x3 and corne thumb
+ * Version 2: Eliptical Rectangle
+ */
 
-*/
 mirror([0,0,0])keycap(
-  keyID  = 3, //change profile refer to KeyParameters Struct
-  cutLen = 0, //Don't change. for chopped caps
-  Stem   = true, //tusn on shell and stems
-  Dish   = true, //turn on dish cut
-  Stab   = 0, 
-  visualizeDish = false, // turn on debug visual of Dish 
-  crossSection  = false, // center cut to check internal
-  homeDot = false, //turn on homedots
-  Legends = false
- );
+  keyID         = 3,    // Change profile refer to KeyParameters Struct
+  cutLen        = 0,    // Don't change. for chopped caps
+  Stem          = true, // Turn on shell and stems
+  Dish          = true, // Turn on dish cut
+  Stab          = 0,
+  visualizeDish = false, // Turn on debug visual of Dish
+  crossSection  = false, // Center cut to check internal
+  homeDot       = false, // Turn on homedots
+  Legends       = false
+);
  
 /*corne thumb hi pro*/
 //color("royalblue")translate([-0,33,0]){
@@ -50,22 +51,22 @@ mirror([0,0,0])keycap(
 //#translate([0,38,13])cube([18-5.7, 18-5.7,1],center = true);
 //echo(len(keyParameters));
 //Parameters
-wallthickness = 2; // 1.5 for norm, 1.25 for cast master
-topthickness  = 2.5;   // 3 for norm, 2.5 for cast master
-stepsize      = 50;  //resolution of Trajectory
-step          = 6;   //resolution of ellipes 
-fn            = 16;  //resolution of Rounded Rectangles: 60 for output
-layers        = 40;  //resolution of vertical Sweep: 50 for output
-dotRadius     = 1.25;   //home dot size
+wallthickness   = 2.0;  // 1.5 for norm, 1.25 for cast master
+topthickness    = 2.5;  // 3 for norm, 2.5 for cast master
+stepsize        = 64;   // Number of steps (resolution) of Trajectory: 64 for output, 50 for development
+step_degree     = 1;    // Resolution (in degree) of ellipes: 1 for output, 6 for development
+fn              = 64;   // Resolution of Rounded Rectangles: 60 for output, 16 for development
+layers          = 64;   // Resolution of vertical Sweep: 50 for output, 40 for development
+dotRadius       = 1.25; // Home dot size
 //---Stem param
-Tol    = 0.10;
-stemRot = 0;
-stemWid = 7.2;
-stemLen = 5.5;
+Tol             = 0.10;
+stemRot         = 0;
+stemWid         = 7.2;
+stemLen         = 5.5;
 stemCrossHeight = 4;
 extra_vertical  = 0.6;
 StemBrimDep     = 0.25; 
-stemLayers      = 50; //resolution of stem to cap top transition
+stemLayers      = 50;   // Resolution of stem to cap top transition
 
 keyParameters = //keyParameters[KeyID][ParameterID]
 [
@@ -187,7 +188,7 @@ function BackTrajectory (keyID) =
 
 //------- function defining Dish Shapes
 
-function ellipse(a, b, d = 0, rot1 = 0, rot2 = 360) = [for (t = [rot1:step:rot2]) [a*cos(t)+a, b*sin(t)*(1+d*cos(t))]]; //Centered at a apex to avoid inverted face
+function ellipse(a, b, d = 0, rot1 = 0, rot2 = 360) = [for (t = [rot1:step_degree:rot2]) [a*cos(t)+a, b*sin(t)*(1+d*cos(t))]]; //Centered at a apex to avoid inverted face
 
 function DishShape (a,b,c,d) = 
   concat(
@@ -202,7 +203,7 @@ function oval_path(theta, phi, a, b, c, deform = 0) = [
  b*sin(phi),
 ]; 
   
-path_trans2 = [for (t=[0:step:180])   translation(oval_path(t,0,10,15,2,0))*rotation([0,90,0])];
+path_trans2 = [for (t=[0:step_degree:180]) translation(oval_path(t,0,10,15,2,0)) *rotation([0,90,0])];
 
 
 //--------------Function definng Cap 
@@ -350,25 +351,25 @@ module keycap(keyID = 0, cutLen = 0, visualizeDish = false, rossSection = false,
 
   //Homing dot
   if (homeDot == true) {
-      // center dot
-      #translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])
-        sphere(d = dotRadius); // center dot
+    // center dot
+    #translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-.25])
+      sphere(d = dotRadius, $fn = fn); // center dot
 
-      // double bar dots (not working)
-      //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
-      //  translate([.75, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+0.5])
-      //    sphere(r = dotRadius); // center dot
-      //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
-      //  translate([-.75, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+0.5])
-      //    sphere(r = dotRadius); // center dot
+    // double bar dots (not working)
+    //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
+    //  translate([.75, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+0.5])
+    //    sphere(r = dotRadius, $fn = fn); // center dot
+    //#rotate([-XAngleSkew(keyID), YAngleSkew(keyID), ZAngleSkew(keyID)])
+    //  translate([-.75, -4.5, KeyHeight(keyID)-DishHeightDif(keyID)+0.5])
+    //    sphere(r = dotRadius, $fn = fn); // center dot
 
-      // tri center dots (not working)
-      //#rotate([0, YAngleSkew(keyID), ZAngleSkew(keyID)])
-      //  translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-0.1]) {
-      //    rotate([0, 0, 0]) translate([0, .75, 0]) sphere(r = dotRadius); // center dot
-      //    rotate([0, 0, 120]) translate([0, .75, 0]) sphere(r = dotRadius); // center dot
-      //    rotate([0, 0, 240]) translate([0, .75, 0]) sphere(r = dotRadius); // center dot
-      //  }
+    // tri center dots (not working)
+    //#rotate([0, YAngleSkew(keyID), ZAngleSkew(keyID)])
+    //  translate([0, 0, KeyHeight(keyID)-DishHeightDif(keyID)-0.1]) {
+    //    rotate([0, 0, 0]) translate([0, .75, 0]) sphere(r = dotRadius, $fn = fn); // center dot
+    //    rotate([0, 0, 120]) translate([0, .75, 0]) sphere(r = dotRadius, $fn = fn); // center dot
+    //    rotate([0, 0, 240]) translate([0, .75, 0]) sphere(r = dotRadius, $fn = fn); // center dot
+    //  }
   }
 }
 
